@@ -47,4 +47,19 @@ def GFOS(Z_est, d_x, t_list, K, alpha, T):
         G=np.multiply(G,x_rough>interval_max)+np.multiply(G,x_rough<interval_min) #eliminate interval
     return Dominant_freq
 
-
+def GFOS_old(Z_est, d_x, t_list, K, alpha, T):
+    """
+    GFOS algorithm
+    """
+    N = len(Z_est)
+    num_x=int(2*np.pi/d_x)
+    x=np.arange(0,num_x)*d_x-np.pi
+    G=np.abs(Z_est.dot(np.exp(1j*np.outer(t_list,x)))/len(Z_est)) #Gaussian filter function
+    Dominant_freq=np.zeros(K,dtype='float')
+    for k in range(K):
+        max_idx = np.argmax(G)
+        Dominant_freq[k]=x[max_idx]
+        interval_max=x[max_idx]+alpha/T
+        interval_min=x[max_idx]-alpha/T
+        G=np.multiply(G,x>interval_max)+np.multiply(G,x<interval_min) #eliminate interval
+    return Dominant_freq

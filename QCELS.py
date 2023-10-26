@@ -224,7 +224,7 @@ def qcels_multimodal(spectrum, population, T_0, T, N_0, N, gamma, K, lambda_prio
     ###----Iteration step----####
     for n_QCELS in range(N_level):
         T=T_0*2**(n_QCELS+1)
-        Z_est, t_list, total_time, max_time=generate_Z_QCELS(
+        Z_est, t_list, max_time, total_time=generate_Z_QCELS(
             spectrum,population,T,N,gamma) #Approximate <\psi|\exp(-itH)|\psi> using Hadmard test
         T_total += total_time
         T_max = max(T_max, max_time)
