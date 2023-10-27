@@ -1,4 +1,4 @@
-""" Main routines for GFOS
+""" Main routines for GFAS
 
 Goal: Given signal, output estimatation of dominant frequencies
 
@@ -24,10 +24,16 @@ Last revision: 10/23/2023
 """
 
 import numpy as np
+from matplotlib import pyplot as plt
 
-def GFOS(Z_est, d_x, t_list, K, alpha, T):
+def GFAS(Z_est, d_x, t_list, K, alpha, T):
     """
-    GFOS algorithm
+    GFAS algorithm
+    
+    Note: This code is slightly different from the algorithm in the paper. 
+    
+    To avoid long classical running time, we first do a rough search 
+    then do a detailed search around the rough maximal point.
     """
     N = len(Z_est)
     num_x=int(2*np.pi/(d_x*10))
@@ -47,9 +53,9 @@ def GFOS(Z_est, d_x, t_list, K, alpha, T):
         G=np.multiply(G,x_rough>interval_max)+np.multiply(G,x_rough<interval_min) #eliminate interval
     return Dominant_freq
 
-def GFOS_old(Z_est, d_x, t_list, K, alpha, T):
+def GFAS_old(Z_est, d_x, t_list, K, alpha, T):
     """
-    GFOS algorithm
+    GFAS algorithm
     """
     N = len(Z_est)
     num_x=int(2*np.pi/d_x)
