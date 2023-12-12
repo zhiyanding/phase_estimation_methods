@@ -1,4 +1,4 @@
-""" Main routines for GFAS
+""" Main routines for QMEGS
 
 Goal: Given signal, output estimatation of dominant frequencies
 
@@ -26,9 +26,9 @@ Last revision: 10/23/2023
 import numpy as np
 from matplotlib import pyplot as plt
 
-def GFAS(Z_est, d_x, t_list, K, alpha, T):
+def QMEGS(Z_est, d_x, t_list, K, alpha, T):
     """
-    GFAS algorithm
+    QMEGS algorithm
     """
     N = len(Z_est)
     num_x=int(2*np.pi/d_x)
@@ -43,9 +43,9 @@ def GFAS(Z_est, d_x, t_list, K, alpha, T):
         G=np.multiply(G,x>interval_max)+np.multiply(G,x<interval_min) #eliminate interval
     return Dominant_freq
 
-def GFAS_new(Z_est, d_x, t_list, K, alpha, T):
+def QMEGS_new(Z_est, d_x, t_list, K, alpha, T):
     """
-    GFAS new algorithm
+    QMEGS new algorithm
     
     Note: This code is slightly different from the algorithm in the paper. 
     
