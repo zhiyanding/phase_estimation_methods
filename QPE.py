@@ -35,6 +35,18 @@ def eval_Fejer_kernel(T,x):
     ret = (1-x_avoid)*ret + (T**2)*x_avoid
     return ret/T
 
+def eval_Kaiser_kernel(T,alpha,x):
+    """
+    Generate the kernel of Kaiser-QPE
+    """
+    x_avoid = np.abs((T*x)**2-(np.pi*alpha)**2)<1e-5
+    numer = np.abs(np.sin(np.emath.sqrt((T*x)**2-(np.pi*alpha)**2)))**2
+    denom = np.abs((T*x)**2-(np.pi*alpha)**2)*(np.i0(np.pi*alpha))**2
+    denom += x_avoid
+    ret = numer / denom
+    ret = (1-x_avoid)*ret + x_avoid/(np.i0(np.pi*alpha))**2
+    return ret
+
 def generate_QPE_distribution(spectrum,population,T):
     """
     Generate the index distribution of QPE
@@ -45,6 +57,19 @@ def generate_QPE_distribution(spectrum,population,T):
     j_arr = 2*np.pi*np.arange(T)/T - np.pi
     for k in range(N):
         dist += population[k] * eval_Fejer_kernel(T,j_arr-spectrum[k])/T
+    return dist
+
+
+def generate_kaiser_QPE_distribution(spectrum,population,T,alpha):
+    """
+    Generate the index distribution of QPE
+    """
+    T=int(T)
+    N = len(spectrum)
+    dist = np.zeros(T)
+    j_arr = 2*np.pi*np.arange(T)/T - np.pi
+    for k in range(N):
+        dist += population[k] * eval_Kaiser_kernel(T,alpha,j_arr-spectrum[k])
     return dist
 
 def draw_with_prob(measure,N):
@@ -70,3 +95,13 @@ def QPE(spectrum,population,T,N):
     ground_state_energy = discrete_energies[index_min]
     return ground_state_energy
 
+def Kaiser_QPE(spectrum,population,T,alpha,N):
+    """
+    Kaiser-QPE Main routine
+    """
+    discrete_energies = 2*np.pi*np.arange(T)/(T) - np.pi 
+    index_dist = generate_kaiser_QPE_distribution(spectrum,population,T,alpha) #Generate QPE samples
+    index_samp = draw_with_prob(index_dist,N)
+    index_min = index_samp.min()
+    ground_state_energy = discrete_energies[index_min]
+    return ground_state_energy
